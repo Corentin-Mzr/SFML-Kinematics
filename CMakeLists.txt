@@ -24,7 +24,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/debug)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/release)
 
 # Glob for source files
-file(GLOB SOURCES CONFIGURE_DEPENDS src/*.cpp)
+file(GLOB SOURCES CONFIGURE_DEPENDS src/*.cpp src/imgui/*.cpp src/imgui-SFML/*.cpp)
 
 # Include SFML for fetch content
 include(FetchContent)
@@ -43,12 +43,14 @@ add_executable(${PROJECT_NAME} ${SOURCES})
 target_include_directories(${PROJECT_NAME} 
 PUBLIC 
     ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/externals/imgui
+    ${CMAKE_CURRENT_SOURCE_DIR}/externals/imgui-SFML
 )
 
 # Link libraries
-target_link_libraries(${PROJECT_NAME} PRIVATE SFML::Graphics)
+target_link_libraries(${PROJECT_NAME} PRIVATE SFML::Graphics opengl32)
 
 # Packaging configuration
-# set(CPACK_PROJECT_NAME ${PROJECT_NAME})
-# set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
-# include(CPack)
+set(CPACK_PROJECT_NAME ${PROJECT_NAME})
+set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
+include(CPack)

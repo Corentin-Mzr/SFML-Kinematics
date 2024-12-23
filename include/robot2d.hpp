@@ -43,6 +43,9 @@ public:
     // Set joint angle, in radians
     void set_joint_angle(const size_t index, const float angle);
 
+    // Set link length, in meters
+    void set_link_length(const size_t index, const float length);
+
     // Print position and angle of each joint in the console, for debug purpose
     void show() const;
 };
@@ -68,4 +71,15 @@ public:
 
     // Set joint angle
     void set_joint_angle(const size_t index, const float angle);
+
+    // Set link length, in meters
+    void set_link_length(const size_t index, const float length);
+
+    // Set joint color
+    void set_joint_color(const size_t index, const sf::Color& color);
+    void set_joint_color(const size_t index, const float color[3]);
+
+    // Set link color
+    void set_link_color(const size_t index, const sf::Color& color);
+    void set_link_color(const size_t index, const float color[3]);
 };

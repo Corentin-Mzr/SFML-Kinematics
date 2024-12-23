@@ -37,7 +37,21 @@ void Robot2d::set_joint_angle(const size_t index, const float angle)
         throw std::out_of_range("Invalid joint index");
     joints[index].angle = angle;
 
-    // Recompute joint positions starting from given index
+    // Recompute joint positions
+    compute_joint_positions();
+}
+
+// Set link length, in meters
+void Robot2d::set_link_length(const size_t index, const float length)
+{
+    if (index >= links.size())
+        throw std::out_of_range("Invalid link index");
+    else if (length < 0)
+        throw std::out_of_range("Link length must be positive");
+
+    links[index].length = length;
+
+    // Recompute joint positions
     compute_joint_positions();
 }
 
@@ -72,8 +86,20 @@ size_t Robot2d::get_link_number() const
 // Constructor of a drawable Robot2d
 SFML_Robot2d::SFML_Robot2d(const Robot2d &robot) : Robot2d(robot)
 {
-    sfml_joints.resize(get_joint_number() + 1);
-    sfml_links.resize(get_link_number());
+    // Initial robot shape and color
+    const float radius = 1.0;
+    sf::CircleShape joint(radius);
+    joint.setOrigin({radius, radius});
+    joint.setFillColor(sf::Color::Green);
+
+    const float width = 1.0;
+    sf::RectangleShape link({10.0, width});
+    link.setOrigin({0.0, width / 2.0f});
+    link.setFillColor(sf::Color::White);
+
+    sfml_joints.resize(get_joint_number() + 1, joint);
+    sfml_links.resize(get_link_number(), link);
+
     update_drawables();
 }
 
@@ -92,20 +118,11 @@ void SFML_Robot2d::draw(sf::RenderTarget &target, sf::RenderStates states) const
 // Update drawable elements (circles and rectangles)
 void SFML_Robot2d::update_drawables()
 {
-    const float radius = 1.0;
-    sf::CircleShape joint(radius);
-    joint.setOrigin({radius, radius});
-    joint.setFillColor(sf::Color::Green);
-
     float width = 1.0;
-    sf::RectangleShape link({10.0, width});
-    link.setOrigin({0.0, width / 2.0f});
-
     for (size_t i = 0; i < joint_positions.size(); ++i)
     {
         // Joint as a circle
-        joint.setPosition({joint_positions[i].first, -joint_positions[i].second});
-        sfml_joints[i] = joint;
+        sfml_joints[i].setPosition({joint_positions[i].first, -joint_positions[i].second});
 
         // Link as a line
         if (i != joint_positions.size() - 1)
@@ -119,11 +136,9 @@ void SFML_Robot2d::update_drawables()
             const float length = links[i].length;
             const sf::Angle angle = sf::radians(atan2(dy, dx));
 
-            link.setSize({length, width});
-            link.setPosition({start.first, -start.second});
-            link.setRotation(-angle);
-
-            sfml_links[i] = link;
+            sfml_links[i].setSize({length, width});
+            sfml_links[i].setPosition({start.first, -start.second});
+            sfml_links[i].setRotation(-angle);
         }
     }
 }
@@ -133,4 +148,41 @@ void SFML_Robot2d::set_joint_angle(const size_t index, const float angle)
 {
     Robot2d::set_joint_angle(index, angle);
     update_drawables();
+}
+
+// Set link length, in meters
+void SFML_Robot2d::set_link_length(const size_t index, const float length)
+{
+    Robot2d::set_link_length(index, length);
+    update_drawables();
+}
+
+// Set joint color
+void SFML_Robot2d::set_joint_color(const size_t index, const sf::Color &color)
+{
+    if (index >= sfml_joints.size())
+        throw std::out_of_range("Invalid joint index");
+    sfml_joints[index].setFillColor(color);
+    update_drawables();
+}
+
+void SFML_Robot2d::set_joint_color(const size_t index, const float color[3])
+{
+    sf::Color c{static_cast<uint8_t>(255 * color[0]), static_cast<uint8_t>(255 * color[1]), static_cast<uint8_t>(255 * color[2])};
+    set_joint_color(index, c);
+}
+
+// Set link color
+void SFML_Robot2d::set_link_color(const size_t index, const sf::Color &color)
+{
+    if (index >= sfml_links.size())
+        throw std::out_of_range("Invalid link index");
+    sfml_links[index].setFillColor(color);
+    update_drawables();
+}
+
+void SFML_Robot2d::set_link_color(const size_t index, const float color[3])
+{
+    sf::Color c{static_cast<uint8_t>(255 * color[0]), static_cast<uint8_t>(255 * color[1]), static_cast<uint8_t>(255 * color[2])};
+    set_link_color(index, c);
 }
