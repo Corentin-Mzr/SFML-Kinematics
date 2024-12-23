@@ -1,12 +1,8 @@
-# CMake SFML Project Template
+# SFML Kinematics
 
-This repository template should allow for a fast and hassle-free kick start of your next SFML project using CMake.
-Thanks to [GitHub's nature of templates](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template), you can fork this repository without inheriting its Git history.
+Very simple kinematics example of a 2D planar robot. Uses SFML and ImGui.
 
-The template starts out very basic, but might receive additional features over time:
-
-- Basic CMake script to build your project and link SFML on any operating system
-- Basic [GitHub Actions](https://github.com/features/actions) script for all major platforms
+![Example](example.gif)
 
 ## How to Use
 
@@ -97,4 +93,4 @@ Here are some useful resources if you want to learn more about CMake:
 
 ## License
 
-The source code is dual licensed under Public Domain and MIT -- choose whichever you prefer.
+The source code is licensed under MIT.
